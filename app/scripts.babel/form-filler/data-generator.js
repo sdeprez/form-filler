@@ -5,12 +5,13 @@ import RandExp from 'randexp';
 import * as data from './dummy-data';
 
 class DataGenerator {
-  constructor(options) {
+  constructor(options, form) {
     this.options = options;
     this.previousValue = '';
     this.previousUsername = '';
     this.previousFirstName = '';
     this.previousLastName = '';
+    this.form = form
   }
 
   isAnyMatch(haystack, needles) {
@@ -355,7 +356,7 @@ class DataGenerator {
     }
 
     if (this.options.fieldMatchSettings.matchLabel) {
-      const label = document.querySelectorAll(`label[for='${element.id}']`);
+      const label = this.form.querySelectorAll(`label[for='${element.id}']`);
       if (label.length === 1) {
         sanitizedElementName += ` ${this.sanitizeName(label[0].innerHTML)}`;
       }
@@ -481,7 +482,7 @@ class DataGenerator {
       }
 
       if (element.type === 'radio') {
-        if (document.querySelectorAll(`input[name="${element.name}"]:checked`).length > 0) {
+        if (this.form.querySelectorAll(`input[name="${element.name}"]:checked`).length > 0) {
           return true;
         }
       }
