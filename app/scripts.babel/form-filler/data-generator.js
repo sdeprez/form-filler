@@ -1,7 +1,5 @@
 /* eslint-disable no-console, class-methods-use-this */
 
-import moment from 'moment';
-import RandExp from 'randexp';
 import * as data from './dummy-data';
 
 class DataGenerator {
@@ -238,13 +236,14 @@ class DataGenerator {
         }
         break;
 
-      case 'regex':
-        try {
-          username = new RandExp(emailSettings.usernameRegEx).gen();
-        } catch (ex) {
-          // Do nothing.
-        }
-        break;
+      // Do not support regex email for the moment.
+      // case 'regex':
+      //   try {
+      //     username = new RandExp(emailSettings.usernameRegEx).gen();
+      //   } catch (ex) {
+      //     // Do nothing.
+      //   }
+      //   break;
 
       default:
         break;
@@ -417,7 +416,8 @@ class DataGenerator {
         return this.generateNumber(field.min, field.max);
 
       case 'date':
-        return moment(this.generateDate()).format(field.template);
+        // TODO: do not support date template for the moment.
+        return this.generateDate();
 
       case 'url':
         return this.generateWebsite();
@@ -428,8 +428,9 @@ class DataGenerator {
       case 'alphanumeric':
         return this.generateAlphanumeric(field.template);
 
-      case 'regex':
-        return new RandExp(field.template, field.caseInSensitive ? 'i' : '').gen();
+      // Do not support the case for the moment.
+      // case 'regex':
+        // return new RandExp(field.template, field.caseInSensitive ? 'i' : '').gen();
 
       case 'randomized-list':
         return field.list[this.generateNumber(0, field.list.length - 1)];
