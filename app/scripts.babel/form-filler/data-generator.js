@@ -1,6 +1,5 @@
 /* eslint-disable no-console, class-methods-use-this */
 
-import jQuery from 'jquery';
 import moment from 'moment';
 import RandExp from 'randexp';
 import * as data from './dummy-data';
@@ -356,9 +355,9 @@ class DataGenerator {
     }
 
     if (this.options.fieldMatchSettings.matchLabel) {
-      const label = jQuery(`label[for='${element.id}']`);
+      const label = document.querySelectorAll(`label[for='${element.id}']`);
       if (label.length === 1) {
-        sanitizedElementName += ` ${this.sanitizeName(label.html())}`;
+        sanitizedElementName += ` ${this.sanitizeName(label[0].innerHTML)}`;
       }
     }
 
@@ -459,16 +458,17 @@ class DataGenerator {
     const radioElement = list[Math.floor(Math.random() * list.length)];
 
     if (this.options.triggerClickEvents) {
-      jQuery(radioElement).click();
+      radioElement.dispatchEvent(new Event('click'))
     } else {
       radioElement.checked = true;
     }
   }
 
   shouldIgnoreField(element) {
-    if (this.options.ignoreHiddenFields && jQuery(element).is(':hidden')) {
-      return true;
-    }
+    // It's the caller responsibility to check hidden fields.
+    // if (this.options.ignoreHiddenFields && jQuery(element).is(':hidden')) {
+    //   return true;
+    // }
 
     const elementName = this.getSanitizedElementName(element);
     if (this.isAnyMatch(elementName, this.options.ignoredFields)) {
@@ -481,13 +481,13 @@ class DataGenerator {
       }
 
       if (element.type === 'radio') {
-        if (jQuery(`input[name="${element.name}"]:checked`).length > 0) {
+        if (document.querySelectorAll(`input[name="${element.name}"]:checked`).length > 0) {
           return true;
         }
       }
 
       if (element.type !== 'checkbox' && element.type !== 'radio') {
-        if (jQuery(element).val() && jQuery(element).val().trim().length > 0) {
+        if (element.value && element.value.trim().length > 0) {
           return true;
         }
       }
@@ -503,8 +503,7 @@ class DataGenerator {
       return;
     }
 
-    const jQueryElement = jQuery(element);
-    let elementType = jQueryElement.attr('type');
+    let elementType = element.getAttribute('type');
 
     if (elementType !== undefined) {
       elementType = elementType.toLowerCase();
@@ -514,7 +513,8 @@ class DataGenerator {
       if (this.isAnyMatch(element.name.toLowerCase(), this.options.agreeTermsFields)) {
         element.checked = true;
       } else if (this.options.triggerClickEvents) {
-        jQueryElement.prop('checked', (Math.random() > 0.5)).click();
+        element.checked = Math.random() > 0.5
+        element.dispatchEvent(new Event('click'))
       } else {
         element.checked = (Math.random() > 0.5) ? 'checked' : '';
       }
@@ -649,7 +649,7 @@ class DataGenerator {
       }
 
       if (valueExists) {
-        jQuery(element).val(value);
+        element.value = value
       } else {
         // Use the default random option item selection because there was
         // no field type or value found.
