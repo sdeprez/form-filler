@@ -513,10 +513,10 @@ class DataGenerator {
       if (this.isAnyMatch(element.name.toLowerCase(), this.options.agreeTermsFields)) {
         element.checked = true;
       } else if (this.options.triggerClickEvents) {
-        element.checked = Math.random() > 0.5
+        element.checked = true
         element.dispatchEvent(new Event('click'))
       } else {
-        element.checked = (Math.random() > 0.5) ? 'checked' : '';
+        element.checked = true
       }
     } else if (elementType === 'date') {
       element.value = this.generateDate();
